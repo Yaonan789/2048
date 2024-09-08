@@ -1,2 +1,1 @@
-## 这是一个简单的完全用Java开发的2048小游戏
-## 不必理会
+# This is a simple game developed entirely in Java
