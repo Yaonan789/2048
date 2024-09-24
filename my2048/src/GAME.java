@@ -6,6 +6,9 @@ import javax.swing.*;
 
 
 public class GAME extends JPanel{
+    //暂停
+    private boolean paused = false;
+
     //游戏状态枚举
     enum State{
         strat,won,running,over
@@ -66,23 +69,29 @@ public class GAME extends JPanel{
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                //根据方向键移动方块
-                switch(e.getKeyCode()){
+                switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        moveUp();
+                        if (!paused) moveUp();
                         break;
                     case KeyEvent.VK_DOWN:
-                        moveDown();
+                        if (!paused) moveDown();
                         break;
                     case KeyEvent.VK_LEFT:
-                        moveLeft();
+                        if (!paused) moveLeft();
                         break;
                     case KeyEvent.VK_RIGHT:
-                        moveRight();
+                        if (!paused) moveRight();
+                        break;
+                    case KeyEvent.VK_P: // 按P暂停
+                        paused = !paused;
+                        break;
+                    case KeyEvent.VK_ESCAPE: // 按Esc结束游戏
+                        gamestate = State.over;
                         break;
                 }
-                repaint();//移动后重绘界面
+                repaint();
             }
+
         });
     }
 
@@ -92,6 +101,14 @@ public class GAME extends JPanel{
         Graphics2D g=(Graphics2D) gg;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         drawGrid(g);//绘制棋盘
+
+        if (paused) {
+            g.setColor(new Color(0, 0, 0, 150)); // 半透明黑色背景
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("SansSerif", Font.BOLD, 48));
+            g.drawString("Paused", 360, 350);
+        }
     }
 
     //开始游戏
@@ -110,6 +127,12 @@ public class GAME extends JPanel{
         g.setColor(gridColor);
         g.fillRoundRect(200,100,499,499,15,15);//绘制棋盘背景
         if(gamestate==State.running){
+            // 在棋盘上方显示提示信息
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("SansSerif", Font.BOLD, 20));
+            g.drawString("Press Esc to end the game", 400, 50);
+            g.drawString("Press P to pause the game", 400, 80);
+
             for(int r=0;r<side;r++){
                 for(int c=0;c<side;c++){
                     if(tiles[r][c]==null){
@@ -139,6 +162,10 @@ public class GAME extends JPanel{
             //提示使用方向键移动方块
             g.drawString("(use arrow keys to move tiles)",310,530);
         }
+        // 显示得分
+        g.setColor(gridColor.darker());
+        g.setFont(new Font("SansSerif", Font.BOLD, 32));
+        g.drawString("Score: " + score, 200, 70);
     }
 
     void drawTile(Graphics2D g,int r,int c){
