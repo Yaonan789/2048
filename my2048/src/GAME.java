@@ -6,7 +6,6 @@ import javax.swing.*;
 
 
 public class GAME extends JPanel{
-    //暂停
     private boolean paused = false;
 
     //游戏状态枚举
@@ -133,6 +132,11 @@ public class GAME extends JPanel{
             g.drawString("Press Esc to end the game", 400, 50);
             g.drawString("Press P to pause the game", 400, 80);
 
+            // 显示得分
+            g.setColor(gridColor.darker());
+            g.setFont(new Font("SansSerif", Font.BOLD, 32));
+            g.drawString("Score: " + score, 200, 70);
+
             for(int r=0;r<side;r++){
                 for(int c=0;c<side;c++){
                     if(tiles[r][c]==null){
@@ -162,10 +166,6 @@ public class GAME extends JPanel{
             //提示使用方向键移动方块
             g.drawString("(use arrow keys to move tiles)",310,530);
         }
-        // 显示得分
-        g.setColor(gridColor.darker());
-        g.setFont(new Font("SansSerif", Font.BOLD, 32));
-        g.drawString("Score: " + score, 200, 70);
     }
 
     void drawTile(Graphics2D g,int r,int c){
