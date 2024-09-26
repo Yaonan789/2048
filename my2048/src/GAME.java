@@ -95,18 +95,17 @@ public class GAME extends JPanel{
     }
 
     @Override
-    public void paintComponent(Graphics gg){
-        super.paintComponent(gg);
-        Graphics2D g=(Graphics2D) gg;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-        drawGrid(g);//绘制棋盘
-
+    public void paintComponent(Graphics gg) {
+        super.paintComponent(gg);  // 调用父类的 paintComponent 来执行默认绘制操作
+        Graphics2D g = (Graphics2D) gg;  // 将 Graphics 转换为 Graphics2D
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);  // 启用抗锯齿
+        drawGrid(g);  // 调用 drawGrid() 方法绘制整个棋盘
         if (paused) {
-            g.setColor(new Color(0, 0, 0, 150)); // 半透明黑色背景
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("SansSerif", Font.BOLD, 48));
-            g.drawString("Paused", 360, 350);
+            g.setColor(new Color(0, 0, 0, 150));  // 设置半透明的黑色背景（用于显示暂停效果）
+            g.fillRect(0, 0, getWidth(), getHeight());  // 绘制一个覆盖整个界面的矩形，表示游戏暂停
+            g.setColor(Color.WHITE);  // 设置字体颜色为白色
+            g.setFont(new Font("SansSerif", Font.BOLD, 48));  // 设置字体为 SansSerif，大小48，加粗
+            g.drawString("Paused", 360, 350);  // 在屏幕中央显示 "Paused" 文本
         }
     }
 
@@ -168,19 +167,21 @@ public class GAME extends JPanel{
         }
     }
 
-    void drawTile(Graphics2D g,int r,int c){
-        int value=tiles[r][c].getValue();//获取方块的值
-        //根据方块值设置颜色
-        g.setColor(colorTable[(int)(Math.log(value)/Math.log(2))+1]);
-        g.fillRoundRect(215+c*121,115+r*121,106,106,7,7);
-        String s=String.valueOf(value);//方块的数字
-        g.setColor(value<128?colorTable[0]:colorTable[1]);
-        FontMetrics fm=g.getFontMetrics();
+    void drawTile(Graphics2D g, int r, int c) {
+        int value = tiles[r][c].getValue();  // 获取方块的值
+        g.setColor(colorTable[(int)(Math.log(value) / Math.log(2)) + 1]);  // 根据方块的值设置颜色
+        g.fillRoundRect(215 + c * 121, 115 + r * 121, 106, 106, 7, 7);  // 绘制方块的圆角矩形背景
+
+        String s = String.valueOf(value);  // 将方块的数值转换为字符串
+        g.setColor(value < 128 ? colorTable[0] : colorTable[1]);  // 根据方块的值设置数字的颜色
+
+        // 获取当前字体的测量器，确保文本居中
+        FontMetrics fm = g.getFontMetrics();
         int asc = fm.getAscent();
         int dec = fm.getDescent();
-        int x=215+c*121+(106-fm.stringWidth(s))/2;
-        int y=115+r*121+(asc+(106-(asc+dec))/2);
-        g.drawString(s,x,y);//绘制方块上的数字
+        int x = 215 + c * 121 + (106 - fm.stringWidth(s)) / 2;  // 计算数字的横向位置
+        int y = 115 + r * 121 + (asc + (106 - (asc + dec)) / 2);  // 计算数字的纵向位置
+        g.drawString(s, x, y);  // 在方块的中央绘制数字
     }
 
     //添加一个随机方块（2/4）
